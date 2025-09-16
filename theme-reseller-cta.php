@@ -66,14 +66,14 @@ function trc_enqueue_frontend_assets() {
 		array(
 			'apiUrl'         => defined( 'TRC_ENDPOINT_DOMAIN' ) ? TRC_ENDPOINT_DOMAIN . "/wp-json/api/v1/reseller/" : '/wp-json/api/v1/reseller/',
 			'defaultWebsite' => defined( 'TRC_DEFAULT_WEBSITE' ) ? TRC_DEFAULT_WEBSITE : 'https://thewebgo.com/',
-			'defaultPhone'   => defined( 'TRC_DEFAULT_PHONE' ) ? TRC_DEFAULT_PHONE : '0989 072 072',
+			'defaultPhone'   => defined( 'TRC_DEFAULT_PHONE' ) ? TRC_DEFAULT_PHONE : '0988 888 888',
 			'defaultName'    => defined( 'TRC_DEFAULT_NAME' ) ? TRC_DEFAULT_NAME : 'thewebgo.com',
 			'buttonPosition' => defined( 'TRC_BUTTON_POSITION' ) ? TRC_BUTTON_POSITION : 'bottom-right',
 			'buttonColor'    => defined( 'TRC_BUTTON_COLOR' ) ? TRC_BUTTON_COLOR : '#007cba',
 			'buttonSpacing'  => defined( 'TRC_BUTTON_SPACING' ) ? TRC_BUTTON_SPACING : '10',
 			'enableButton'   => defined( 'TRC_ENABLE_BUTTON' ) ? TRC_ENABLE_BUTTON : true,
 			'modalBackgroundColor' => defined( 'TRC_MODAL_BACKGROUND_COLOR' ) ? TRC_MODAL_BACKGROUND_COLOR : '#1e73be',
-			'defaultMessage' => defined( 'TRC_DEFAULT_MESSAGE' ) ? TRC_DEFAULT_MESSAGE : 'Bạn đang xem demo từ thewebgo.com',
+			'defaultMessage' => defined( 'TRC_DEFAULT_MESSAGE' ) ? TRC_DEFAULT_MESSAGE : 'Bạn đang xem demo từ',
 		)
 	);
 

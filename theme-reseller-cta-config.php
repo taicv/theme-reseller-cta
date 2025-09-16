@@ -27,13 +27,13 @@ define( 'TRC_ENDPOINT_DOMAIN', 'https://thewebgo.com' );
 define( 'TRC_DEFAULT_WEBSITE', 'https://thewebgo.com/' );
 
 // Default reseller phone number
-define( 'TRC_DEFAULT_PHONE', '0989 072 072' );
+define( 'TRC_DEFAULT_PHONE', '0988 888 888' );
 
 // Default reseller name/nickname
 define( 'TRC_DEFAULT_NAME', 'thewebgo.com' );
 
 // Default reseller name/nickname
-define( 'TRC_DEFAULT_MESSAGE', 'Bạn đang xem demo từ thewebgo.com' );
+define( 'TRC_DEFAULT_MESSAGE', 'Bạn đang xem demo từ' );
 
 /**
  * Additional Configuration Options

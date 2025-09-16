@@ -9,14 +9,14 @@
     const config = window.trcConfig || {};
     const RESELLER_API_URL = config.apiUrl+resellerId || 'https://thewebgo.com//wp-json/api/v1/reseller/' + resellerId;
     const DEFAULT_WEBSITE = config.defaultWebsite || 'https://thewebgo.com';
-    const DEFAULT_PHONE = config.defaultPhone || '0989 072 072';
-    const DEFAULT_NAME = config.defaultName || 'Theme Wordpress giá rẻ';
+    const DEFAULT_PHONE = config.defaultPhone || '0988 888 888';
+    const DEFAULT_NAME = config.defaultName || 'thewebgo.com';
     const BUTTON_POSITION = config.buttonPosition || 'bottom-right';
     const BUTTON_COLOR = config.buttonColor || '#ffffff';
     const BUTTON_SPACING = config.buttonSpacing || '10';
     const ENABLE_BUTTON = config.enableButton !== false;
     const MODAL_BACKGROUND_COLOR = config.modalBackgroundColor || '#1e73be';
-    const DEFAULT_MESSAGE = config.defaultMessage || 'Bạn đang xem demo từ thewebgo.com';
+    const DEFAULT_MESSAGE = config.defaultMessage || 'Bạn đang xem demo từ ';
 
     // Initialize with default values
     let resellerData = {
@@ -177,7 +177,7 @@
         websiteBtn.target = '_blank';
 
         const message = document.createElement('p');
-        message.textContent = DEFAULT_MESSAGE;
+        message.textContent = DEFAULT_MESSAGE+" "+resellerData.nickname;
 
         content.appendChild(close);
         content.appendChild(message);
