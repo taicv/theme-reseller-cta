@@ -74,6 +74,10 @@ function trc_enqueue_frontend_assets() {
 			'enableButton'   => defined( 'TRC_ENABLE_BUTTON' ) ? TRC_ENABLE_BUTTON : true,
 			'modalBackgroundColor' => defined( 'TRC_MODAL_BACKGROUND_COLOR' ) ? TRC_MODAL_BACKGROUND_COLOR : '#1e73be',
 			'defaultMessage' => defined( 'TRC_DEFAULT_MESSAGE' ) ? TRC_DEFAULT_MESSAGE : 'Bạn đang xem demo từ',
+			'buttonHtml'     => defined( 'TRC_BUTTON_HTML' ) ? TRC_BUTTON_HTML : '[i]',
+			'modalHtml'      => defined( 'TRC_MODAL_HTML' ) ? TRC_MODAL_HTML : '<span class="trc-close">×</span><p>{MESSAGE} {NICKNAME}</p><a class="trc-btn" href="tel:{PHONE}">📞 {PHONE}</a><a class="trc-btn" href="{URL}" target="_blank">🌐 Website</a>',
+			'buttonCss'      => defined( 'TRC_BUTTON_CSS' ) ? TRC_BUTTON_CSS : '',
+			'modalCss'       => defined( 'TRC_MODAL_CSS' ) ? TRC_MODAL_CSS : '',
 		)
 	);
 
