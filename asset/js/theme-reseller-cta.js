@@ -3,27 +3,57 @@
 
     // Get configuration from PHP
     const config = window.trcConfig || {};
+    
+    // Core configuration
     const RESELLER_API_URL = config.apiUrl || 'https://thewebgo.com//wp-json/api/v1/reseller/';
-    const DEFAULT_WEBSITE = config.defaultWebsite || 'https://thewebgo.com';
-    const DEFAULT_PHONE = config.defaultPhone || '0988 888 888';
-    const DEFAULT_NAME = config.defaultName || 'thewebgo.com';
+    const ENABLE_BUTTON = config.enableButton !== false;
+    
+    // UI configuration
     const BUTTON_POSITION = config.buttonPosition || 'bottom-right';
     const BUTTON_COLOR = config.buttonColor || '#ffffff';
     const BUTTON_SPACING = config.buttonSpacing || '10';
-    const ENABLE_BUTTON = config.enableButton !== false;
     const MODAL_BACKGROUND_COLOR = config.modalBackgroundColor || '#1e73be';
     const DEFAULT_MESSAGE = config.defaultMessage || 'Bạn đang xem demo từ ';
+    
+    // Template configuration
     const BUTTON_HTML = config.buttonHtml || '[i]';
-    const MODAL_HTML = config.modalHtml || '<span class="trc-close">×</span><p>{MESSAGE} {NICKNAME}</p><a class="trc-btn" href="tel:{PHONE}">📞 {PHONE}</a><a class="trc-btn" href="{URL}" target="_blank">🌐 WEBSITE</a>';
+    const MODAL_HTML = config.modalHtml || '<span class="trc-close">×</span><p>{MESSAGE} {NICKNAME}</p><a class="trc-btn" href="tel:{BILLING_PHONE}">📞 {BILLING_PHONE}</a><a class="trc-btn" href="{URL}" target="_blank">🌐 WEBSITE</a>';
     const BUTTON_CSS = config.buttonCss || '';
     const MODAL_CSS = config.modalCss || '';
+    
+    // Data mapping configuration
+    const FIELD_MAPPING = config.fieldMapping || {
+        'nickname': 'data.reseller.nickname',
+        'billing_phone': 'data.reseller.billing_phone',
+        'url': 'data.reseller.url'
+    };
+    const DEFAULT_VALUES = config.defaultValues || {
+        'nickname': 'thewebgo.com',
+        'billing_phone': '0988 888 888',
+        'url': 'https://thewebgo.com/'
+    };
+
+    // Function to get nested property from object using dot notation
+    function getNestedProperty(obj, path) {
+        return path.split('.').reduce((current, prop) => {
+            return current && current[prop] !== undefined ? current[prop] : null;
+        }, obj);
+    }
+
+    // Function to map API response to reseller data using field mapping
+    function mapApiResponse(apiData) {
+        const mappedData = {};
+        
+        for (const [localField, apiPath] of Object.entries(FIELD_MAPPING)) {
+            const value = getNestedProperty(apiData, apiPath);
+            mappedData[localField] = value || DEFAULT_VALUES[localField] || '';
+        }
+        
+        return mappedData;
+    }
 
     // Initialize with default values
-    let resellerData = {
-        nickname: DEFAULT_NAME,
-        billing_phone: DEFAULT_PHONE,
-        url: DEFAULT_WEBSITE
-    };
+    let resellerData = { ...DEFAULT_VALUES };
 
     // Exit early if button is disabled
     if (!ENABLE_BUTTON) {
@@ -47,27 +77,50 @@
 
     // Template replacement function
     function replaceTemplateVars(template, data) {
-        return template
+        let result = template
             .replace(/\{BUTTON_COLOR\}/g, BUTTON_COLOR)
             .replace(/\{MODAL_BACKGROUND_COLOR\}/g, MODAL_BACKGROUND_COLOR)
-            .replace(/\{NICKNAME\}/g, data.nickname || DEFAULT_NAME)
-            .replace(/\{PHONE\}/g, data.billing_phone || DEFAULT_PHONE)
-            .replace(/\{URL\}/g, data.url || DEFAULT_WEBSITE)
             .replace(/\{MESSAGE\}/g, DEFAULT_MESSAGE)
             .replace(/\{BUTTON_SPACING\}/g, getPositionStyles(BUTTON_POSITION, BUTTON_SPACING));
+        
+        // Replace all mapped fields dynamically
+        for (const [fieldName, value] of Object.entries(data)) {
+            const placeholder = `{${fieldName.toUpperCase()}}`;
+            const regex = new RegExp(placeholder, 'g');
+            result = result.replace(regex, value || '');
+        }
+        
+        return result;
     }
 
-    // Create styles
-    const style = document.createElement('style');
-    let cssContent = '';
+    // Generate and inject CSS styles
+    function createStyles() {
+        const style = document.createElement('style');
+        let cssContent = '';
 
-    // Use custom CSS if provided, otherwise use default styles
-    if (BUTTON_CSS) {
-        cssContent += replaceTemplateVars(BUTTON_CSS, resellerData);
-        // Add position styles to button CSS
-        cssContent = cssContent.replace('.trc-float-btn {', `.trc-float-btn { ${getPositionStyles(BUTTON_POSITION, BUTTON_SPACING)}`);
-    } else {
-        cssContent += `
+        // Generate button CSS
+        if (BUTTON_CSS) {
+            cssContent += replaceTemplateVars(BUTTON_CSS, resellerData);
+            // Add position styles to button CSS
+            cssContent = cssContent.replace('.trc-float-btn {', `.trc-float-btn { ${getPositionStyles(BUTTON_POSITION, BUTTON_SPACING)}`);
+        } else {
+            cssContent += getDefaultButtonCSS();
+        }
+
+        // Generate modal CSS
+        if (MODAL_CSS) {
+            cssContent += replaceTemplateVars(MODAL_CSS, resellerData);
+        } else {
+            cssContent += getDefaultModalCSS();
+        }
+
+        style.textContent = cssContent;
+        document.head.appendChild(style);
+    }
+
+    // Default button CSS
+    function getDefaultButtonCSS() {
+        return `
         .trc-float-btn {
             position: fixed;
             ${getPositionStyles(BUTTON_POSITION, BUTTON_SPACING)}
@@ -91,10 +144,9 @@
         }`;
     }
 
-    if (MODAL_CSS) {
-        cssContent += replaceTemplateVars(MODAL_CSS, resellerData);
-    } else {
-        cssContent += `
+    // Default modal CSS
+    function getDefaultModalCSS() {
+        return `
         .trc-modal {
             position: fixed;
             top: 0;
@@ -143,9 +195,6 @@
         }`;
     }
 
-    style.textContent = cssContent;
-    document.head.appendChild(style);
-
     // Cookie helper functions
     function setCookie(name, value, days = 7) {
         const expires = new Date();
@@ -182,6 +231,9 @@
 
     // Fetch reseller data
     function fetchResellerData() {
+        // Create styles first
+        createStyles();
+        
         // Create button immediately with default data
         createFloatButton();
         
@@ -193,17 +245,13 @@
             fetch(RESELLER_API_URL + resellerId)
                 .then(response => response.json())
                 .then(data => {
-                    // Update resellerData with API response
-                    if (data && data.data.status === 200) {
-                        resellerData = {
-                            nickname: data.data.reseller.nickname || resellerData.nickname,
-                            billing_phone: data.data.reseller.billing_phone || resellerData.billing_phone,
-                            url: data.data.reseller.url || resellerData.url
-                        };
-                        // Save to cookies for future visits
-                        saveResellerDataToCookie(resellerData);
-                        console.log('Fetched and cached new reseller data');
-                    } else {
+                // Update resellerData with API response
+                if (data && data.data && data.data.status === 200) {
+                    resellerData = mapApiResponse(data);
+                    // Save to cookies for future visits
+                    saveResellerDataToCookie(resellerData);
+                    console.log('Fetched and cached new reseller data:', resellerData);
+                } else {
                         // Show modal after 3 seconds
                         setTimeout(() => showModal(), 3000);
                     }
@@ -216,15 +264,18 @@
         
         // Check if we have cached reseller data in cookies
         
-        else if (cachedData && cachedData.nickname && cachedData.billing_phone && cachedData.url) {
-            // Use cached data
-            resellerData = {
-                nickname: cachedData.nickname,
-                billing_phone: cachedData.billing_phone,
-                url: cachedData.url
-            };
-            console.log('Using cached reseller data from cookies');
-            return;
+        else if (cachedData && Object.keys(cachedData).length > 0) {
+            // Validate cached data has required fields
+            const hasRequiredFields = Object.keys(FIELD_MAPPING).some(field => 
+                cachedData[field] && cachedData[field] !== ''
+            );
+            
+            if (hasRequiredFields) {
+                // Use cached data, filling in missing fields with defaults
+                resellerData = { ...DEFAULT_VALUES, ...cachedData };
+                console.log('Using cached reseller data from cookies:', resellerData);
+                return;
+            }
         }
         else {
             // Show modal after 3 seconds

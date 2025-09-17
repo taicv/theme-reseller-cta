@@ -65,9 +65,6 @@ function trc_enqueue_frontend_assets() {
 		'trcConfig',
 		array(
 			'apiUrl'         => defined( 'TRC_ENDPOINT_DOMAIN' ) ? TRC_ENDPOINT_DOMAIN . "/wp-json/api/v1/reseller/" : '/wp-json/api/v1/reseller/',
-			'defaultWebsite' => defined( 'TRC_DEFAULT_WEBSITE' ) ? TRC_DEFAULT_WEBSITE : 'https://thewebgo.com/',
-			'defaultPhone'   => defined( 'TRC_DEFAULT_PHONE' ) ? TRC_DEFAULT_PHONE : '0988 888 888',
-			'defaultName'    => defined( 'TRC_DEFAULT_NAME' ) ? TRC_DEFAULT_NAME : 'thewebgo.com',
 			'buttonPosition' => defined( 'TRC_BUTTON_POSITION' ) ? TRC_BUTTON_POSITION : 'bottom-right',
 			'buttonColor'    => defined( 'TRC_BUTTON_COLOR' ) ? TRC_BUTTON_COLOR : '#007cba',
 			'buttonSpacing'  => defined( 'TRC_BUTTON_SPACING' ) ? TRC_BUTTON_SPACING : '10',
@@ -75,9 +72,19 @@ function trc_enqueue_frontend_assets() {
 			'modalBackgroundColor' => defined( 'TRC_MODAL_BACKGROUND_COLOR' ) ? TRC_MODAL_BACKGROUND_COLOR : '#1e73be',
 			'defaultMessage' => defined( 'TRC_DEFAULT_MESSAGE' ) ? TRC_DEFAULT_MESSAGE : 'Bạn đang xem demo từ',
 			'buttonHtml'     => defined( 'TRC_BUTTON_HTML' ) ? TRC_BUTTON_HTML : '[i]',
-			'modalHtml'      => defined( 'TRC_MODAL_HTML' ) ? TRC_MODAL_HTML : '<span class="trc-close">×</span><p>{MESSAGE} {NICKNAME}</p><a class="trc-btn" href="tel:{PHONE}">📞 {PHONE}</a><a class="trc-btn" href="{URL}" target="_blank">🌐 Website</a>',
+			'modalHtml'      => defined( 'TRC_MODAL_HTML' ) ? TRC_MODAL_HTML : '<span class="trc-close">×</span><p>{MESSAGE} {NICKNAME}</p><a class="trc-btn" href="tel:{BILLING_PHONE}">📞 {BILLING_PHONE}</a><a class="trc-btn" href="{URL}" target="_blank">🌐 Website</a>',
 			'buttonCss'      => defined( 'TRC_BUTTON_CSS' ) ? TRC_BUTTON_CSS : '',
 			'modalCss'       => defined( 'TRC_MODAL_CSS' ) ? TRC_MODAL_CSS : '',
+			'fieldMapping'   => defined( 'TRC_FIELD_MAPPING' ) ? TRC_FIELD_MAPPING : array(
+				'nickname'      => 'data.reseller.nickname',
+				'billing_phone' => 'data.reseller.billing_phone', 
+				'url'          => 'data.reseller.url',
+			),
+			'defaultValues'  => defined( 'TRC_DEFAULT_VALUES' ) ? TRC_DEFAULT_VALUES : array(
+				'nickname'      => 'thewebgo.com',
+				'billing_phone' => '0988 888 888',
+				'url'          => 'https://thewebgo.com/',
+			),
 		)
 	);
 

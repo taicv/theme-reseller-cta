@@ -20,19 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'TRC_ENDPOINT_DOMAIN', 'https://thewebgo.com' );
 
 /**
- * Default Reseller Information
- * These values will be used when the API request fails or returns no data
+ * Default Message Configuration
  */
-// Default reseller website URL
-define( 'TRC_DEFAULT_WEBSITE', 'https://thewebgo.com/' );
-
-// Default reseller phone number
-define( 'TRC_DEFAULT_PHONE', '0988 888 888' );
-
-// Default reseller name/nickname
-define( 'TRC_DEFAULT_NAME', 'thewebgo.com' );
-
-// Default reseller name/nickname
+// Default message shown in modal
 define( 'TRC_DEFAULT_MESSAGE', 'Bạn đang xem demo từ' );
 
 /**
@@ -59,11 +49,11 @@ define( 'TRC_ENABLE_BUTTON', true );
 // Button HTML template (use {BUTTON_COLOR}, {MODAL_BACKGROUND_COLOR} for dynamic colors)
 define( 'TRC_BUTTON_HTML', '[i]' );
 
-// Modal content HTML template (use {NICKNAME}, {PHONE}, {URL}, {MESSAGE} for dynamic content)
+// Modal content HTML template (use {NICKNAME}, {BILLING_PHONE}, {URL}, {MESSAGE} for dynamic content)
 define( 'TRC_MODAL_HTML', '
 <span class="trc-close">×</span>
 <p>{MESSAGE} {NICKNAME}</p>
-<a class="trc-btn" href="tel:{PHONE}">📞 {PHONE}</a>
+<a class="trc-btn" href="tel:{BILLING_PHONE}">📞 {BILLING_PHONE}</a>
 <a class="trc-btn" href="{URL}" target="_blank">🌐 WEBSITE</a>
 ' );
 
@@ -143,3 +133,23 @@ define( 'TRC_MODAL_CSS', '
     cursor: pointer;
 }
 ' );
+
+/**
+ * Flexible Field Mapping Configuration
+ * Configure which fields to fetch from API and how to map them
+ */
+// Field mapping from API response to local variables
+// Format: 'local_field_name' => 'api.path.to.field'
+// Use dot notation to access nested properties (e.g., 'data.reseller.nickname')
+define( 'TRC_FIELD_MAPPING', array(
+	'nickname'      => 'data.reseller.nickname',
+	'billing_phone' => 'data.reseller.billing_phone', 
+	'url'          => 'data.reseller.url',
+) );
+
+// Default values for each field (used when API fails or field is missing)
+define( 'TRC_DEFAULT_VALUES', array(
+	'nickname'      => 'thewebgo.com',
+	'billing_phone' => '0988 888 888',
+	'url'          => 'https://thewebgo.com/',
+) );
